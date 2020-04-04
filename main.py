@@ -11,7 +11,7 @@ class PatientRq(BaseModel):
 
 class PatientResp(BaseModel):
     id: int
-    patient: PatientRq
+    patient: dict
 
 @app.get("/")
 def root():
@@ -36,4 +36,4 @@ def method_delete():
 @app.post("/patient", response_model=PatientResp)
 def receive_patient(rq: PatientRq):
     app.counter += 1
-    return PatientResp(id=app.counter,patient=rq)
+    return PatientResp(id=app.counter,patient=rq.dict())
