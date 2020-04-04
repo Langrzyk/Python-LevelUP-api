@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+app = FastAPI()
 app.counter = 0
 
 class PatientRq(BaseModel):
@@ -11,8 +12,6 @@ class PatientRq(BaseModel):
 class PatientResp(BaseModel):
     id: int
     patient: PatientRq
-
-app = FastAPI()
 
 @app.get("/")
 def root():
