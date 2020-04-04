@@ -10,7 +10,7 @@ class PatientRq(BaseModel):
 
 class PatientResp(BaseModel):
     id: int
-    patient: dict
+    patient: PatientRq
 
 app = FastAPI()
 
@@ -18,15 +18,15 @@ app = FastAPI()
 def root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
-@app.get("/method/")
+@app.get("/method")
 def method_get():
     return {"method": "GET"}
 
-@app.post("/method/")
+@app.post("/method")
 def method_post():
     return {"method": "POST"}
 
-@app.put("/method/")
+@app.put("/method")
 def method_put():
     return {"method": "PUT"}
 
@@ -34,7 +34,7 @@ def method_put():
 def method_delete():
     return {"method": "DELETE"}
 
-@app.post("/patient/", response_model=PatientResp)
+@app.post("/patient", response_model=PatientResp)
 def receive_patient(rq: PatientRq):
     app.counter += 1
-    return PatientResp(id=app.counter,patient=rq.dict())
+    return PatientResp(id=app.counter,patient=rq)
