@@ -42,7 +42,7 @@ def receive_patient(rq: PatientRq):
 
 @app.get("/patient/{pk}")
 def info_patient(pk: int):
-    if pk < len(app.patients) and pk > 0:
-        return app.patients[pk]
+    if pk < len(app.patients):
+        return app.patients[pk-1]
     else:
         return JSONResponse(status_code=204)
