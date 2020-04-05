@@ -40,9 +40,9 @@ def receive_patient(rq: PatientRq):
     app.counter += 1
     return PatientResp(id=app.counter,patient=rq)
 
-@app.get("/patient/{pk}",response_model=PatientRq)
+@app.get("/patient/{pk}")
 def info_patient(pk: int):
-    if pk >= app.counter or pk < 0:
-		return JSONResponse(status_code=204)
-	else:
+    if pk < len(app.patients):
         return app.patients[pk]
+    else:
+        return JSONResponse(status_code=204)
