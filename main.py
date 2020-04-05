@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 app.counter = 0
+app.patients = []
 
 class PatientRq(BaseModel):
     name: str
@@ -35,5 +36,13 @@ def method_delete():
 
 @app.post("/patient", response_model=PatientResp)
 def receive_patient(rq: PatientRq):
+    app.patients.append(rq)
     app.counter += 1
     return PatientResp(id=app.counter,patient=rq)
+
+@app.get("/patient/{pk}")
+def info_patient(pk: int):
+    if pk < len(app.patients):
+        return app.patients[pk]
+    else:
+        return JSONResponse(status_code=204)
