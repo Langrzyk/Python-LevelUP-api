@@ -38,7 +38,7 @@ def method_delete():
 def receive_patient(rq: PatientRq):
     app.patients.append(rq)
     app.counter += 1
-    return app.patients
+    return PatientResp(id=app.counter,patient=rq)
 
 @app.get("/patient/{pk}")
 def info_patient(pk: int):
