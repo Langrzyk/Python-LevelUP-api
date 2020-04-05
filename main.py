@@ -1,6 +1,7 @@
 # main.py
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 app.counter = 0
