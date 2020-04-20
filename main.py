@@ -19,6 +19,11 @@ class PatientResp(BaseModel):
 def root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
+@app.get("/welcome")
+def root():
+    return {"message": "Hello"}
+
+
 @app.get("/method")
 def method_get():
     return {"method": "GET"}
