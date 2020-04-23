@@ -4,9 +4,11 @@ from fastapi.responses import RedirectResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from hashlib import sha256
 from functools import wraps
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 security = HTTPBasic()
+templates = Jinja2Templates(directory="templates")
 router.secret_key = "QXV0aG9yaXphdGlvbiBCYXNpYyBsb2dpbjogdHJ1ZG5ZIHBhc3N3b3JkOiBQYUMx"
 
 #dekorator
@@ -20,11 +22,14 @@ def to_authorize(to_authorize):
         return result
     return inner
 
+@router.get('/')
+def root():
+    return {"message": "Welcome to my world!"}
 
 @router.get('/welcome')
-@router.get('/')
-def welcome():
-    return {"message": "Welcome to my world!"}
+@to_authorize
+def welcome(request: Request):
+    return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
 
 
 @router.post("/login")
@@ -41,7 +46,7 @@ def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
     response.set_cookie(key="session_token", value=session_token)
     return response
 
-@router.post("/logout")
+@router.post("/login")
 @to_authorize
 def logout(request: Request):
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
