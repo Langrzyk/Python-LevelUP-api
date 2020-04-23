@@ -59,16 +59,12 @@ def patient_POST(request: Request, new_patient: PatientRq):
 @router.get("/patient")
 @to_authorize
 def patient_GET(request: Request):
-    global patients
-
     return patients
 
 
 @router.get("/patient/{pk}")
 @to_authorize
 def info_patient(request: Request, pk: int):
-    global patients
-
     if pk in patients.keys():
         return patients[pk]
     else:
