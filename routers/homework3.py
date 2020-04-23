@@ -41,7 +41,7 @@ def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
     response.set_cookie(key="session_token", value=session_token)
     return response
 
-@router.post("/login")
+@router.post("/logout")
 @to_authorize
 def logout(request: Request):
     response = RedirectResponse(url="/", status_code=status.HTTP_302_FOUND)
