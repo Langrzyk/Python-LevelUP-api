@@ -6,7 +6,7 @@ from functools import wraps
 
 router = APIRouter()
 router.counter = 0
-patients = {}
+router.patients = {}
 
 class PatientRq(BaseModel):
     name: str
@@ -47,7 +47,7 @@ def method_delete():
 @router.post("/patient")
 @to_authorize
 def patient_POST(request: Request, new_patient: PatientRq):
-    global router.patients
+    global patients
     if len(patients.keys()) == 0:
         id = 0
     else:
