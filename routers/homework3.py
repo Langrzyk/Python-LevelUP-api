@@ -16,14 +16,13 @@ def welcome():
 
 @router.post("/login")
 def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
-    username = secrets.compare_digest(credentials.username,'trudnY')
-    password = secrets.compare_digest(credentials.password, 'PaC13Nt')
-    if not (username and password):
+    username_pass = secrets.compare_digest(credentials.username,'trudnY')
+    password_pass = secrets.compare_digest(credentials.password, 'PaC13Nt')
+    if not (username_pass and password_pass):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect pass",
         )
-    session_token = sha256(bytes(f"{credentials.username}{credentials.password}{router.secret_key}", encoding='utf8')).hexdigest()
-    print("session_token=",session_token)
+    session_token = sha256(bytes(f"{credentials.username}{credentials.password}", encoding='utf8')).hexdigest()
     response.set_cookie(key="session_token", value=session_token)
     response = RedirectResponse(url='/welcome', status_code=status.HTTP_302_FOUND)
