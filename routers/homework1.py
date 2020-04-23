@@ -48,26 +48,26 @@ def method_delete():
 @router.post("/patient")
 @to_authorize
 def patient_POST(request: Request, new_patient: PatientRq):
-    global patients
-    if len(patients.keys()) == 0:
+    global router.patients
+    if len(router.patients.keys()) == 0:
         id = 0
     else:
-        id = max(patients.keys()) + 1
-    patients[id] = new_patient
+        id = max(router.patients.keys()) + 1
+    router.patients[id] = new_patient
 
     return RedirectResponse(url=f'/patient/{id}', status_code=status.HTTP_302_FOUND)
 
 @router.get("/patient")
 @to_authorize
 def patient_GET(request: Request):
-    return patients
+    return router.patients
 
 
 @router.get("/patient/{pk}")
 @to_authorize
 def info_patient(request: Request, pk: int):
-    if pk in patients.keys():
-        return patients[pk]
+    if pk in router.patients.keys():
+        return router.patients[pk]
     else:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
@@ -75,6 +75,6 @@ def info_patient(request: Request, pk: int):
 @router.delete("/patient/{pk}")
 @to_authorize
 def patient_DELETE(request: Request, pk: int):
-    if pk in patients.keys():
-        del patients[pk]
+    if pk in router.patients.keys():
+        del router.patients[pk]
     return Response(status_code=status.HTTP_204_NO_CONTENT)
