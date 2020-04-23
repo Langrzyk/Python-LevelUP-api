@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Request, Query,  Cookie, HTTPException, Response, status
+from fastapi import FastAPI, Request, Query,  Cookie, HTTPException, Response, Depends
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse, RedirectResponse
 #----------------------------
 from typing import List
 from hashlib import sha256
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 # main.py
 
 
@@ -11,6 +12,8 @@ app = FastAPI()
 app.secret_key = "QXV0aG9yaXphdGlvbjogQmFzaWMgZEhKMVpHNVpPbEJoUXpFelRuUT0"
 app.counter = 0
 app.patients = []
+
+security = HTTPBasic()
 
 class PatientRq(BaseModel):
     name: str
@@ -60,9 +63,12 @@ def info_patient(pk: int):
 
 #-------------------------------------------------------------------------------
 @app.post("/login")
-def create_cookie(user: str, password: str, response: Response):
-    response.status_code = status.HTTP_302_FOUND
-    response.headers["Location"] = "/welcome"
-    session_token = sha256(bytes(f"{user}{password}{app.secret_key}", encoding='utf8')).hexdigest()
-    response.set_cookie(key="session_token", value=session_token)
+def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
+    username = secrets.compare_digest(credentials.username,'trudnY')
+    password = secrets.compare_digest(credentials.password, 'PaC13Nt')
+    if not (username and password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect pass",
+        )
     return RedirectResponse(url='/welcome', status_code=status.HTTP_302_FOUND)
