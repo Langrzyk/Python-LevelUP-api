@@ -23,6 +23,6 @@ def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect pass",
         )
-    session_token = sha256(bytes(f"{credentials.username}{credentials.password}", encoding='utf8')).hexdigest()
+    session_token = sha256(bytes(f"{credentials.username}{credentials.password}{router.secret_key}")).hexdigest()
     response.set_cookie(key="session_token", value=session_token)
     response = RedirectResponse(url='/welcome', status_code=status.HTTP_302_FOUND)
