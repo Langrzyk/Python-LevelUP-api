@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Request, Query,  Cookie, HTTPException, Response
+from fastapi import FastAPI, Request, Query,  Cookie, HTTPException, Response, status
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse, RedirectResponse
+#----------------------------
 from typing import List
 from hashlib import sha256
 # main.py
 
 
 app = FastAPI()
-app.secret_key = "very constatn and random secret, best 64 characters"
+app.secret_key = "QXV0aG9yaXphdGlvbjogQmFzaWMgZEhKMVpHNVpPbEJoUXpFelRuUT0"
 app.counter = 0
 app.patients = []
 
@@ -26,6 +27,7 @@ def root():
 @app.get("/welcome")
 def root():
     return {"message": "Hello"}
+
 
 @app.get("/method")
 def method_get():
@@ -57,8 +59,10 @@ def info_patient(pk: int):
         return JSONResponse(status_code=204)
 
 #-------------------------------------------------------------------------------
-@app.post("/login/")
+@app.post("/login")
 def create_cookie(user: str, password: str, response: Response):
-    session_token = sha256(bytes(f"{user}{password}{app.secret_key}")).hexdigest()
+    response.status_code = status.HTTP_302_FOUND
+    response.headers["Location"] = "/welcome"
+    session_token = sha256(bytes(f"{user}{password}{app.secret_key}", encoding='utf8')).hexdigest()
     response.set_cookie(key="session_token", value=session_token)
-    return RedirectResponse(url='/welcome')
+    return RedirectResponse(url='/welcome', status_code=status.HTTP_302_FOUND)
