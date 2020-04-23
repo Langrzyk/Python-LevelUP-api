@@ -1,5 +1,5 @@
 # main.py
-from fastapi import APIRouter
+from fastapi import APIRouter, Response, Request,
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 
@@ -15,9 +15,9 @@ class PatientResp(BaseModel):
     id: int
     patient: PatientRq
 
-@router.get("/")
-def root():
-    return {"message": "Hello World during the coronavirus pandemic!"}
+# @router.get("/")
+# def root():
+#     return {"message": "Hello World during the coronavirus pandemic!"}
 
 @router.get("/method")
 def method_get():
