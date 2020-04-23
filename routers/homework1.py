@@ -1,11 +1,11 @@
 # main.py
-from fastapi import APIRouter, Response, Request,
+from fastapi import Response, Request, APIRouter
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 
-router  = APIRouter()
-router .counter = 0
-router .patients = []
+router = APIRouter()
+router.counter = 0
+router.patients = []
 
 class PatientRq(BaseModel):
     name: str
