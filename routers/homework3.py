@@ -6,6 +6,7 @@ from hashlib import sha256
 
 router = APIRouter()
 security = HTTPBasic()
+router.secret_key = "QXV0aG9yaXphdGlvbjogQmFzaWMgZEhKMVpHNVpPbEJoUXpFelRuUT0"
 
 @router.get('/welcome')
 @router.get('/')
@@ -22,7 +23,7 @@ def create_cookie(credentials: HTTPBasicCredentials = Depends(security)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect pass",
         )
-    session_token = sha256(bytes(f"{credentials.username}{credentials.password}{app.secret_key}", encoding='utf8')).hexdigest()
+    session_token = sha256(bytes(f"{credentials.username}{credentials.password}{router.secret_key}", encoding='utf8')).hexdigest()
     print("session_token=",session_token)
     response.set_cookie(key="session_token", value=session_token)
     response = RedirectResponse(url='/welcome', status_code=status.HTTP_302_FOUND)
