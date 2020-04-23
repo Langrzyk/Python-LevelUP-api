@@ -1,16 +1,16 @@
 # main.py
-from fastapi import Response, Request, APIRouter
+from fastapi import Response, Request, APIRouter, status
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from functools import wraps
 
 router = APIRouter()
 router.counter = 0
-router.patients = []
+router.patients = {}
 
 class PatientRq(BaseModel):
     name: str
-    surename: str
+    surname: str
 
 class PatientResp(BaseModel):
     id: int
@@ -44,17 +44,40 @@ def method_put():
 def method_delete():
     return {"method": "DELETE"}
 
-@router.post("/patient", response_model=PatientResp)
+@router.post("/patient")
 @to_authorize
-def receive_patient(rq: PatientRq):
-    app.patients.append(rq)
-    app.counter += 1
-    return PatientResp(id=app.counter,patient=rq)
+def patient_POST(request: Request, new_patient: PatientRq):
+    global patients
+    if len(patients.keys()) == 0:
+        id = 0
+    else:
+        id = max(patients.keys()) + 1
+    patients[id] = new_patient
+
+    return RedirectResponse(url=f'/patient/{id}', status_code=status.HTTP_302_FOUND)
+
+@router.get("/patient")
+@to_authorize
+def patient_GET(request: Request):
+    global patients
+
+    return patients
+
 
 @router.get("/patient/{pk}")
 @to_authorize
-def info_patient(pk: int):
-    if pk < len(app.patients):
-        return app.patients[pk]
+def info_patient(request: Request, pk: int):
+    global patients
+
+    if pk in patients.keys():
+        return patients[pk]
     else:
-        return JSONResponse(status_code=204)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.delete("/patient/{pk}")
+@to_authorize
+def patient_DELETE(request: Request, pk: int):
+    if pk in patients.keys():
+        del patients[pk]
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
