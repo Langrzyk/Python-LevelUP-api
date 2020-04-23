@@ -2,6 +2,7 @@
 from fastapi import Response, Request, APIRouter, status
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from functools import wraps
 
 router = APIRouter()
