@@ -6,7 +6,7 @@ from functools import wraps
 
 router = APIRouter()
 router.counter = 0
-router.patients = {}
+patients = {}
 
 class PatientRq(BaseModel):
     name: str
