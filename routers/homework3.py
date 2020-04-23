@@ -6,7 +6,7 @@ from hashlib import sha256
 
 router = APIRouter()
 security = HTTPBasic()
-router.secret_key = "QXV0aG9yaXphdGlvbjogQmFzaWMgZEhKMVpHNVpPbEJoUXpFelRuUT0"
+router.secret_key = "QXV0aG9yaXphdGlvbiBCYXNpYyBsb2dpbjogdHJ1ZG5ZIHBhc3N3b3JkOiBQYUMx"
 
 @router.get('/welcome')
 @router.get('/')
