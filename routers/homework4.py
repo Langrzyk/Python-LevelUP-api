@@ -46,15 +46,14 @@ async def album_add(response: Response, album: Albums):
     if not artist:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"detail":{"error":"No Artist with id"}}
-
     data = router.db_connection.execute(
-        "INSERT INTO albums (Title, Artistid) VALUES (:Title , :id)",
-        {'Title': album.title, 'id': artist_id})
+        "INSERT INTO albums (Title, Artistid) VALUES (:Title, :id)",
+        {'Title': album.title, 'id': album.artist_id})
     router.db_connection.commit()
     new_album_id = cursor.lastrowid
     router.db_connection.row_factory = sql.Row
     album = router.db_connection.execute(
-        "SELECT AlbumId, title, artistid FROM albums WHERE albumid = :id",
+        "SELECT albumid, title, artistid FROM albums WHERE albumid = :id",
          {'id': new_album_id}).fetchone()
 
     response.status_code = status.HTTP_201_CREATED
