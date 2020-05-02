@@ -60,9 +60,12 @@ async def album_add(response: Response, album: Albums):
     return {"AlbumId": data.lastrowid, "Title": album.title, "ArtistId": album.artist_id}
 
 @router.get("/albums/{album_id}")
-async def Album_check(album_id: int):
-	router.db_connection.row_factory = sql.Row
-	data = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
-		{'id':album_id}).fetchone()
+async def tracks_composers(response: Response, album_id: int):
+	router.db_connection.row_factory = aiosqlite.Row
+	album = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = ?",
+		(album_id, )).fetchone()
+    if album is None:
+    	response.status_code = status.HTTP_404_NOT_FOUND
+    	return {"detail":{"error":"Album with that ID does not exist."}}
 
-	return data
+	return album
