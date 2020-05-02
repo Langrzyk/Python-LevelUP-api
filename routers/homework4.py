@@ -56,6 +56,8 @@ async def album_add(response: Response, album: Albums):
     album = router.db_connection.execute(
         "SELECT albumid, title, artistid FROM albums WHERE albumid = :id;",
         {'id': new_album_id }).fetchone()
+    response.status_code = status.HTTP_201_CREATED
+    
     return album
 
 @router.get("/albums/{album_id}")
