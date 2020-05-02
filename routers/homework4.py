@@ -54,7 +54,7 @@ async def album_add(response: Response, album: Albums):
     new_album_id = cursor.lastrowid
     router.db_connection.row_factory = sql.Row
     album = router.db_connection.execute(
-        "SELECT albumid, title, artistid FROM albums WHERE albumid = :id",
+        "SELECT AlbumId, title, artistid FROM albums WHERE albumid = :id",
          {'id': new_album_id}).fetchone()
 
     return album
@@ -63,6 +63,6 @@ async def album_add(response: Response, album: Albums):
 async def Album_check(album_id: int):
 	router.db_connection.row_factory = sql.Row
 	data = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
-		{'id':album_id}.fetchone()
+		{'id':album_id}).fetchone()
 
 	return data
