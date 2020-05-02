@@ -52,16 +52,14 @@ async def album_add(response: Response, album: Albums):
     router.db_connection.commit()
     new_album_id = cursor.lastrowid
     router.db_connection.row_factory = sql.Row
-    albums = router.db_connection.execute(
-        "SELECT albumid, title, artistid FROM albums WHERE albumid = :id",
-         {'id': new_album_id}).fetchone()
-
-    response.status_code = status.HTTP_201_CREATED
-    return {"AlbumId": data.lastrowid, "Title": album.title, "ArtistId": album.artist_id}
+    album = db.execute(
+        "SELECT albumid, title, artistid FROM albums WHERE albumid = ?;",
+        (cursor.lastrowid,)).fetchone()
+    return album
 
 @router.get("/albums/{album_id}")
 async def tracks_composers(response: Response, album_id: int):
-	router.db_connection.row_factory = aiosqlite.Row
+	router.db_connection.row_factory = sql.Row
 	album = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = ?",
 		(album_id, )).fetchone()
 
