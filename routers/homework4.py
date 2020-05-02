@@ -16,7 +16,7 @@ async def shutdown():
 async def tracks(page: int = 0, per_page: int = 10):
     router.db_connection.row_factory = sql.Row
     tracks = router.db_connection.execute(
-        "SELECT * FROM tracks LIMIT :per_page OFFSET :offset",
+        "SELECT * FROM tracks ORDER BY TrackId LIMIT :per_page OFFSET :offset",
         {'per_page': per_page, 'offset': page*per_page}).fetchall()
 
     return tracks
