@@ -12,7 +12,7 @@ async def shutdown():
     router.db_connection.close()
 
 
-@router.post("/tracks")
+@router.get("/tracks")
 async def tracks(page: int = 0, per_page: int = 10):
     router.db_connection.row_factory = sql.Row
     tracks = router.db_connection.execute(
