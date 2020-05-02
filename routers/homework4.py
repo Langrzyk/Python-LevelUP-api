@@ -11,6 +11,15 @@ async def startup():
 async def shutdown():
     router.db_connection.close()
 
+@app.get("/test")
+async def tracks():
+    app.db_connection.row_factory = lambda cursor, x: x[0]
+
+    tracks = app.db_connection.execute("SELECT name FROM tracks").fetchall()
+    return {
+        "tracks": tracks,
+    }
+
 
 @router.get("/tracks")
 async def tracks(page: int = 0, per_page: int = 10):
