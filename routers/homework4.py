@@ -60,9 +60,9 @@ async def album_add(response: Response, album: Albums):
     return album
 
 @router.get("/albums/{album_id}")
-async def Album_check(response: Response, album_id: int):
+async def Album_check(album_id: int):
 	router.db_connection.row_factory = sql.Row
-	cursor = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
+	data = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
 		{'id':album_id}.fetchone()
 
-	return album
+	return data
