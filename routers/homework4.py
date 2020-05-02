@@ -38,7 +38,7 @@ async def composers(response: Response, composer_name: str):
     return data
 
 @router.post("/albums")
-async def artists_add(album: Albums):
+async def album_add(response: Response, album: Albums):
     router.db_connection.row_factory = lambda cursor, x: x[0]
     artist = router.db_connection.execute(
         "SELECT Name FROM artist WHERE ArtistId = :id",
@@ -58,3 +58,11 @@ async def artists_add(album: Albums):
          {'id': new_album_id}).fetchone()
 
     return album
+
+@router.get("/albums/{album_id}")
+async def Album_check(response: Response, album_id: int):
+	router.db_connection.row_factory = sql.Row
+	cursor = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
+		{'id':album_id}.fetchone()
+
+	return album
