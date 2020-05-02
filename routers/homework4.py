@@ -1,5 +1,10 @@
 import sqlite3 as sql
 from fastapi import APIRouter, Response, status
+from pydantic import BaseModel
+
+class Albums(BaseModel):
+    title: str
+    artist_id: int
 
 router = APIRouter()
 
@@ -31,3 +36,25 @@ async def composers(response: Response, composer_name: str):
         return {"detail":{"error":"No tracks for composer"}}
 
     return data
+
+@router.post("/albums")
+async def artists_add(album: Albums):
+    router.db_connection.row_factory = lambda cursor, x: x[0]
+    artist = router.db_connection.execute(
+        "SELECT Name FROM artist WHERE ArtistId = :id",
+        {'id': album.artist_id}).fetchall()
+    if not artist:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"detail":{"error":"No Artist with id"}}
+
+    data = router.db_connection.execute(
+        "INSERT INTO albums (Title, ArtistId) VALUES (:Title, :id)",
+        {'Title': album.title, 'id': artist_id})
+    router.db_connection.commit()
+    new_album_id = cursor.lastrowid
+    router.db_connection.row_factory = sql.Row
+    album = router.db_connection.execute(
+        "SELECT albumid, title, artistid FROM albums WHERE albumid = :id",
+         {'id': new_album_id}).fetchone()
+
+    return album
