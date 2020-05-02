@@ -52,12 +52,12 @@ async def album_add(response: Response, album: Albums):
     router.db_connection.commit()
     new_album_id = cursor.lastrowid
     router.db_connection.row_factory = sql.Row
-    album = router.db_connection.execute(
+    albums = router.db_connection.execute(
         "SELECT albumid, title, artistid FROM albums WHERE albumid = :id",
          {'id': new_album_id}).fetchone()
 
     response.status_code = status.HTTP_201_CREATED
-    return {"AlbumId": cursor.lastrowid, "Title": album.title, "ArtistId": album.artist_id}
+    return {"AlbumId": data.lastrowid, "Title": album.title, "ArtistId": album.artist_id}
 
 @router.get("/albums/{album_id}")
 async def Album_check(album_id: int):
