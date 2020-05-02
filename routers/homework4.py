@@ -5,7 +5,7 @@ router = APIRouter()
 
 @router.on_event("startup")
 async def startup():
-    router.db_connection = sql.connect('./chinook.db')
+    router.db_connection = sql.connect('chinook.db')
 
 @router.on_event("shutdown")
 async def shutdown():
