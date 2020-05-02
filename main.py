@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routers import homework1, homework3, homework4
 
+
 app = FastAPI()
 
 app.include_router(homework1.router, tags=['endpoint homework1'])
