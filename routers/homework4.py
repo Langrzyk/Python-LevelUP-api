@@ -104,7 +104,7 @@ async def actual_customer(response: Response, customer: Customers, customer_id: 
     return custome
 
 
-@route.get("/sales")
+@router.get("/sales")
 async def sales(response: Response, category: str):
     if category == "customers":
         router.db_connection.row_factory = sql.Row
