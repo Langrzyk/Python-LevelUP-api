@@ -8,13 +8,13 @@ class Albums(BaseModel):
     artist_id: int
 
 class Customers(BaseModel):
-    company: str
-    address: str
-    city: str
-    state: str
-    country: str
-    postalcode: str
-    fax: str
+    company: str = None
+    address: str = None
+    city: str = None
+    state: str = None
+    country: str = None
+    postalcode: str = None
+    fax: str = None
 
 router = APIRouter()
 
@@ -72,8 +72,8 @@ async def album_add(response: Response, album: Albums):
 @router.get("/albums/{album_id}")
 async def tracks_composers(response: Response, album_id: int):
 	router.db_connection.row_factory = sql.Row
-	album = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = :id",
-		{'id': album_id}).fetchone()
+	album = router.db_connection.execute("SELECT * FROM albums WHERE AlbumId = ?",
+		(album_id, )).fetchone()
 
 	return album
 
@@ -88,8 +88,10 @@ async def actual_customer(response: Response, customer: Customers, customer_id: 
         return {"detail":{"error":"No client with id"}}
 
     update_customer = jsonable_encoder(customer)
+    #update_customer = customer.dict(exclude_unset=True)
+    print(update_customer)
     changes = ", ".join(f"{key} = '{update_customer[key]}'"
-        for key in update_customer if update_customer[key] != 'string')
+        for key in update_customer if update_customer[key] != None)
     updates = router.db_connection.execute(
         f"UPDATE customers SET {changes} WHERE CustomerId = :id",
         {'id': customer_id})
